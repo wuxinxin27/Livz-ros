@@ -1,44 +1,44 @@
 // Copyright (c) [2023] [Lantern]
-// 
+//
 // This file is part of [Livz]
-// 
+//
 // This project is licensed under the MIT License.
 // See LICENSE.txt for details.
-#include "include/livz_animate.hpp"
+#include "livz/livz_animate.hpp"
 
 namespace RATE_FUNC{
 
-    double linear(double t){ 
-        return std::max(0.0, std::min(t, 1.0)); 
+    double linear(double t){
+        return std::max(0.0, std::min(t, 1.0));
     }
 
     double quadratic(double t){
-        t = std::max(0.0, std::min(t, 1.0));  
+        t = std::max(0.0, std::min(t, 1.0));
         return t * t;
     }
 
     double cubic(double t){
-        t = std::max(0.0, std::min(t, 1.0)); 
+        t = std::max(0.0, std::min(t, 1.0));
         return t * t * t;
     }
 
     double sine(double t){
-        t = std::max(0.0, std::min(t, 1.0)); 
+        t = std::max(0.0, std::min(t, 1.0));
         return sin(t * M_PI_2);
     }
 
     double circular(double t){
-        t = std::max(0.0, std::min(t, 1.0)); 
+        t = std::max(0.0, std::min(t, 1.0));
         return 1 - sqrt(1 - t * t);
     }
 
     double elastic(double t){
-        t = std::max(0.0, std::min(t, 1.0)); 
+        t = std::max(0.0, std::min(t, 1.0));
         return -pow(2, 10 * (t - 1)) * sin((t - 1.1) * 5 * M_PI);
     }
 
     double bounce(double t){
-        t = std::max(0.0, std::min(t, 1.0)); 
+        t = std::max(0.0, std::min(t, 1.0));
         if (t < 4 / 11.0) {
             return (121 * t * t) / 16.0;
         } else if (t < 8 / 11.0) {
@@ -85,7 +85,7 @@ namespace INTERPOLATION {
                 int index = int(i * step);
                 if(N1 > N2){ interpolation(more_one.col(i) ,less_one.col(index)  , position, tick ); }
                 else       { interpolation(less_one.col(index) , more_one.col(i) , position, tick ); }
-                
+
                 result.col(i) = position;
             }
         }

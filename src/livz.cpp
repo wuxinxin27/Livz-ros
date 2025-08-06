@@ -1,10 +1,10 @@
 // Copyright (c) [2023] [Lantern]
-// 
+//
 // This file is part of [Livz]
-// 
+//
 // This project is licensed under the MIT License.
 // See LICENSE.txt for details.
-#include "include/livz.hpp"
+#include "livz/livz.hpp"
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
@@ -29,7 +29,7 @@ namespace CONFIG{
 }
 
 namespace LCOLOR{
-   
+
 Eigen::Vector4d HEX( const std::string& hex_color ) {
     if (hex_color.front() == '#') {
         std::stringstream ss;
@@ -44,7 +44,7 @@ Eigen::Vector4d HEX( const std::string& hex_color ) {
         return Eigen::Vector4d( r/255.0, g/255.0, b/255.0, 1.0 );
     }
     return Eigen::Vector4d(0,0,0,1);
-} 
+}
 
 };
 
@@ -113,9 +113,9 @@ ros::Publisher& Livz::getPublisher(const std::string& topic_name) {
     return publisher;
 }
 
-ros::Publisher& Livz::getLTPublisher() { 
-    return getInstance().litouch_terminal_msg_pub; 
-} 
+ros::Publisher& Livz::getLTPublisher() {
+    return getInstance().litouch_terminal_msg_pub;
+}
 
 std::map<std::string, PublisherInfo>& Livz::getPublishers()
 {
@@ -234,7 +234,7 @@ void Livz::launchLiTouch(const std::string& config_path )
         bool res            = (std::system(command.c_str()) == 0);
         if (res) {
             python_comand += version;
-            
+
             PRINT_COLOR_TEXT("[LiTouch] 使用"+python_comand+"启动。" , GREEN);
             break;
         }
@@ -310,7 +310,7 @@ void Livz::clearAll(const std::string& topic_name, const std::string& frame_id)
                           <<"[Livz] Topic \""<<topic_name<<"\" has not been published. " , YELLOW);
         return ;
     }
-    
+
     ros::Publisher& publisher  = publisher_info.publisher;
     std::string publisher_type = publisher_info.type;
 
@@ -360,13 +360,13 @@ void Livz::clearScreen(const std::string& frame_id)
 }
 
 
-void Livz::drawOnePoint( const std::string& topic_name, 
-                               const Eigen::Vector3d& position, 
-                               double size, 
-                               Eigen::Vector4d color, 
-                               double opacity, 
-                               std::string frame_id, 
-                               int id) 
+void Livz::drawOnePoint( const std::string& topic_name,
+                               const Eigen::Vector3d& position,
+                               double size,
+                               Eigen::Vector4d color,
+                               double opacity,
+                               std::string frame_id,
+                               int id)
 {
     if( std::isinf(position.norm()) || std::isnan(position.norm()) ) { return ; }
     ros::Publisher& publisher = getInstance().getPublisher(topic_name);
@@ -401,13 +401,13 @@ void Livz::drawOnePoint( const std::string& topic_name,
     publisher.publish(point);
 }
 
-void Livz::drawPoints( const std::string& topic_name, 
-                       const std::vector<Eigen::Vector3d>& positions, 
-                       std::vector<double> sizes, 
-                       std::vector<Eigen::Vector4d> colors, 
+void Livz::drawPoints( const std::string& topic_name,
+                       const std::vector<Eigen::Vector3d>& positions,
+                       std::vector<double> sizes,
+                       std::vector<Eigen::Vector4d> colors,
                        std::vector<double> opacities,
-                       std::string frame_id, 
-                       int id) 
+                       std::string frame_id,
+                       int id)
 {
     ros::Publisher& publisher = getInstance().getPublisher(topic_name);
     visualization_msgs::Marker points;
@@ -451,7 +451,7 @@ void Livz::drawPoints( const std::string& topic_name,
         points.scale.y = sizes[i];
         points.scale.z = sizes[i];
     }
-    
+
     publisher.publish(points);
 }
 
@@ -589,7 +589,7 @@ void Livz::drawOneArrow(const std::string& topic_name,
     arrow.color.r = color[0];
     arrow.color.g = color[1];
     arrow.color.b = color[2];
-    arrow.pose.orientation.w = 1.0; 
+    arrow.pose.orientation.w = 1.0;
     arrow.color.a = (opacity >= 0.0 && opacity <= 1.0) ? opacity : color(3);
     arrow.color.a = (arrow.color.a >= 0.0 && arrow.color.a <= 0.1) ? 0 : arrow.color.a;
     publisher.publish(arrow);
@@ -615,7 +615,7 @@ void Livz::drawArrows(const std::string& topic_name,
     Eigen::Vector3d start_point, end_point;
     Eigen::Vector3d scale;
     for (size_t i = 0; i < start_points.size(); i ++ ) {
-        
+
         start_point = start_points[i];
         end_point   = end_points[i];
         scale       = scales[i];
@@ -645,7 +645,7 @@ void Livz::drawArrows(const std::string& topic_name,
         arrow.color.r = color[0];
         arrow.color.g = color[1];
         arrow.color.b = color[2];
-        arrow.pose.orientation.w = 1.0; 
+        arrow.pose.orientation.w = 1.0;
         arrow.color.a = (opacity >= 0.0 && opacity <= 1.0) ? opacity : color(3);
         arrow.color.a = (arrow.color.a >= 0.0 && arrow.color.a <= 0.1) ? 0 : arrow.color.a;
 
@@ -675,7 +675,7 @@ void Livz::drawArrowsWithColors(const std::string& topic_name,
     Eigen::Vector4d color;
     Eigen::Vector3d scale;
     for (size_t i = 0; i < start_points.size(); i ++ ) {
-        
+
         start_point = start_points[i];
         end_point   = end_points[i];
         color       = colors[i];
@@ -706,7 +706,7 @@ void Livz::drawArrowsWithColors(const std::string& topic_name,
         arrow.color.r = color[0];
         arrow.color.g = color[1];
         arrow.color.b = color[2];
-        arrow.pose.orientation.w = 1.0; 
+        arrow.pose.orientation.w = 1.0;
         arrow.color.a = (opacity >= 0.0 && opacity <= 1.0) ? opacity : color(3);
         arrow.color.a = (arrow.color.a >= 0.0 && arrow.color.a <= 0.1) ? 0 : arrow.color.a;
 
@@ -929,13 +929,13 @@ void Livz::draw2DPolygon_POLYGON(const std::string& topic_name,
 
 void Livz::draw2DRect(const std::string& topic_name,
                        const Eigen::Vector3d& top_left,
-                       double width, double height, 
+                       double width, double height,
                        double rot_z,
                        Eigen::Vector4d color,
                         double stroke_width,
                        double opacity,
                        std::string frame_id,
-                       int id) 
+                       int id)
 {
     const double z = top_left(2);
     std::vector<Eigen::Vector3d> vertices = {
@@ -958,7 +958,7 @@ void Livz::draw2DCircle(const std::string& topic_name,
                          double opacity,
                          std::string frame_id,
                          int id,
-                         int samples) 
+                         int samples)
 {
     const double z = center(2);
     std::vector<Eigen::Vector3d> vertices;
@@ -980,7 +980,7 @@ void Livz::draw2DEllipse(const std::string& topic_name,
                           double opacity,
                           std::string frame_id,
                           int id,
-                          int samples) 
+                          int samples)
 {
     const double z = center(2);
     std::vector<Eigen::Vector3d> vertices;
@@ -1192,7 +1192,7 @@ void Livz::drawParametricCurve(const std::string& topic_name,
     double t = lower_bound;
     while (t <= upper_bound) {
         Eigen::Vector3d p = curve_function(t);
-        Eigen::Vector3d v = velocity_function(t, 1e-5); 
+        Eigen::Vector3d v = velocity_function(t, 1e-5);
         geometry_msgs::Point point;
         point.x = p(0);
         point.y = p(1);
@@ -1245,14 +1245,14 @@ void Livz::drawViewText(   const std::string& topic_name,
     publisher.publish(marker);
 }
 
-void Livz::renderTrianglesWithColors(const std::string& topic_name, 
-                                 Eigen::Matrix3Xd &mesh_vertexes, 
-                                 const std::vector<Eigen::Vector4d>& colors, 
+void Livz::renderTrianglesWithColors(const std::string& topic_name,
+                                 Eigen::Matrix3Xd &mesh_vertexes,
+                                 const std::vector<Eigen::Vector4d>& colors,
                                  double opacity,
                                  std::string frame_id,
                                  int id)
 {
-    int ptnum = mesh_vertexes.cols(); 
+    int ptnum = mesh_vertexes.cols();
     if (colors.size() < floor(ptnum/3.0)) {
         PRINT_COLOR_TEXT("[Livz - ERROR] 颜色列表的数目小于三角面数。话题名为 " << topic_name, RED);
         return;
@@ -1269,7 +1269,7 @@ void Livz::renderTrianglesWithColors(const std::string& topic_name,
     triangles.scale.y = 1.00;
     triangles.scale.z = 1.00;
 
-    triangles.pose.orientation.w = 1.0; 
+    triangles.pose.orientation.w = 1.0;
 
     std_msgs::ColorRGBA triangle_color;
     triangles.color.r = colors[0](0);
@@ -1300,9 +1300,9 @@ void Livz::renderTrianglesWithColors(const std::string& topic_name,
     publisher.publish(triangles);
 }
 
-void Livz::renderTriangleMesh(const std::string& topic_name, 
-                                 Eigen::Matrix3Xd &mesh_vertexes, 
-                                 Eigen::Vector4d color, 
+void Livz::renderTriangleMesh(const std::string& topic_name,
+                                 Eigen::Matrix3Xd &mesh_vertexes,
+                                 Eigen::Vector4d color,
                                  double opacity,
                                  std::string frame_id,
                                  int id)
@@ -1320,7 +1320,7 @@ void Livz::renderTriangleMesh(const std::string& topic_name,
     mesh.scale.y = 1.00;
     mesh.scale.z = 1.00;
 
-    mesh.pose.orientation.w = 1.0; 
+    mesh.pose.orientation.w = 1.0;
     mesh.color.r = color[0];
     mesh.color.g = color[1];
     mesh.color.b = color[2];
@@ -1328,7 +1328,7 @@ void Livz::renderTriangleMesh(const std::string& topic_name,
     mesh.color.a = (mesh.color.a >= 0.0 && mesh.color.a <= 0.1) ? 0 : mesh.color.a;
 
     geometry_msgs::Point point;
-    int ptnum = mesh_vertexes.cols(); 
+    int ptnum = mesh_vertexes.cols();
     for (int i = 0; i < ptnum; i++)
     {
         point.x = mesh_vertexes(0, i);
@@ -1339,11 +1339,11 @@ void Livz::renderTriangleMesh(const std::string& topic_name,
     publisher.publish(mesh);
 }
 //唯一需要注意U，G matrix的格式
-void Livz::renderTriangleMeshWithEdges( const std::string& meshtopic, 
-                                        const std::string& edgetopic, 
-                                            Eigen::MatrixXd &U, 
-                                            Eigen::MatrixXi &G, 
-                                            Eigen::Vector4d color, 
+void Livz::renderTriangleMeshWithEdges( const std::string& meshtopic,
+                                        const std::string& edgetopic,
+                                            Eigen::MatrixXd &U,
+                                            Eigen::MatrixXi &G,
+                                            Eigen::Vector4d color,
                                             double opacity,
                                             std::string frame_id,
                                             int id)
@@ -1403,8 +1403,8 @@ void Livz::renderTriangleMeshWithEdges( const std::string& meshtopic,
     publisheredge.publish(meshMarker);
 }
 
-void Livz::renderTriangleMeshEdges( const std::string& topic_name, 
-                                        Eigen::Matrix3Xd &mesh_vertexes, 
+void Livz::renderTriangleMeshEdges( const std::string& topic_name,
+                                        Eigen::Matrix3Xd &mesh_vertexes,
                                         Eigen::Vector4d color,
                                         double stroke_width,
                                         double opacity,
@@ -1431,13 +1431,13 @@ void Livz::renderTriangleMeshEdges( const std::string& topic_name,
     Livz::drawLineList(topic_name, edge_vertexes, stroke_width, color, opacity, frame_id, id);
 }
 
-void Livz::renderSurface(const std::string& topic_name, 
-                               ParametricSurfaceFunction surf_function, 
+void Livz::renderSurface(const std::string& topic_name,
+                               ParametricSurfaceFunction surf_function,
                                Eigen::Vector2d u_range,
                                Eigen::Vector2d v_range,
                                double u_res,
                                double v_res,
-                               Eigen::Vector4d color, 
+                               Eigen::Vector4d color,
                                double opacity,
                                std::string frame_id,
                                int id)
@@ -1445,7 +1445,7 @@ void Livz::renderSurface(const std::string& topic_name,
 
     int u_spcount = floor(u_range[1] - u_range[0]) / u_res;
     int v_spcount = floor(v_range[1] - v_range[0]) / v_res;
-    
+
     u_res = (u_range[1] - u_range[0]) / u_spcount;
     v_res = (v_range[1] - v_range[0]) / v_spcount;
     Eigen::Matrix3Xd mesh_vertexes(3, u_spcount * v_spcount * 6); // 每个方块2个三角形，每个三角形3个顶点
@@ -1479,14 +1479,14 @@ void Livz::renderSurface(const std::string& topic_name,
     Livz::renderTriangleMesh(topic_name, mesh_vertexes, color, opacity, frame_id, id);
 }
 
-void Livz::renderVectorField(  const std::string& topic_name, 
+void Livz::renderVectorField(  const std::string& topic_name,
                                     VectorField field_function,
                                     Eigen::Vector3d box_min ,
                                     Eigen::Vector3d box_max ,
                                     Eigen::Vector3d resolution,
                                     const bool only_2d,
-                                    Eigen::Vector4d color_min, 
-                                    Eigen::Vector4d color_max, 
+                                    Eigen::Vector4d color_min,
+                                    Eigen::Vector4d color_max,
                                     double opacity ,
                                     std::string frame_id,
                                     int id )
@@ -1556,7 +1556,7 @@ void Livz::renderVectorField(  const std::string& topic_name,
     Livz::drawArrowsWithColors(topic_name, sample_points, sample_ends ,arrow_sizes, arrow_colors,opacity, frame_id, id );
 }
 
-void Livz::renderStreamLines(  const std::string& topic_name, 
+void Livz::renderStreamLines(  const std::string& topic_name,
                                     VectorField field_function,
                                     Eigen::Vector3d box_min ,
                                     Eigen::Vector3d box_max ,
@@ -1564,8 +1564,8 @@ void Livz::renderStreamLines(  const std::string& topic_name,
                                     int start_step ,
                                     int end_step,
                                     const bool only_2d,
-                                    Eigen::Vector4d color_min, 
-                                    Eigen::Vector4d color_max, 
+                                    Eigen::Vector4d color_min,
+                                    Eigen::Vector4d color_max,
                                     double opacity ,
                                     std::string frame_id,
                                     int id )
