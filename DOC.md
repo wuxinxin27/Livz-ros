@@ -4,35 +4,36 @@
 
 可使用的API包括：
 
--- drawOnePoint  `         绘制一个点`  
--- drawPoints  `         绘制若干个点`  
--- drawOneSphere  `         绘制一个球体`  
--- drawOneCylinder  `         绘制圆柱体`  
--- drawOneCube  `         绘制立方体`  
--- drawOneArrow  `         绘制箭头`  
--- drawArrows  `         绘制一组箭头`  
--- drawArrowsWithColors  `         绘制一组具有不同颜色的箭头`  
--- drawLineStrip  `         绘制一条折线`  
--- drawLineList  `         绘制线段集`  
--- drawLineListWithColors  `         绘制具有不同颜色的线段集`  
--- draw2DPolygon  `         绘制一个2D多边形`  
--- draw2DRect  `         绘制一个2D矩形`  
--- draw2DCircle  `         绘制一个2D圆`  
--- draw2DEllipse  `         绘制一个2D椭圆`  
--- draw2DCone`         绘制一个2D圆锥`  
--- drawViewText `         绘制始终朝向视口的文字`  
--- renderTriangleMesh `         绘制三角网格体`  
--- renderTriangleMeshEdges `         绘制三角网格体边棱`    
--- drawPointcloud `         绘制点云`   
--- drawPointcloudRGB `         绘制彩色点云`   
--- drawPointcloudI `         绘制带强度信息点云` 
+-- drawOnePoint  `         绘制一个点`
+-- drawPoints  `         绘制若干个点`
+-- drawOneSphere  `         绘制一个球体`
+-- drawOneEllipsoid  `         绘制一个椭球`
+-- drawOneCylinder  `         绘制圆柱体`
+-- drawOneCube  `         绘制立方体`
+-- drawOneArrow  `         绘制箭头`
+-- drawArrows  `         绘制一组箭头`
+-- drawArrowsWithColors  `         绘制一组具有不同颜色的箭头`
+-- drawLineStrip  `         绘制一条折线`
+-- drawLineList  `         绘制线段集`
+-- drawLineListWithColors  `         绘制具有不同颜色的线段集`
+-- draw2DPolygon  `         绘制一个2D多边形`
+-- draw2DRect  `         绘制一个2D矩形`
+-- draw2DCircle  `         绘制一个2D圆`
+-- draw2DEllipse  `         绘制一个2D椭圆`
+-- draw2DCone`         绘制一个2D圆锥`
+-- drawViewText `         绘制始终朝向视口的文字`
+-- renderTriangleMesh `         绘制三角网格体`
+-- renderTriangleMeshEdges `         绘制三角网格体边棱`
+-- drawPointcloud `         绘制点云`
+-- drawPointcloudRGB `         绘制彩色点云`
+-- drawPointcloudI `         绘制带强度信息点云`
 
-上述API的调用可参考API文档注释，或演示程序。  
+上述API的调用可参考API文档注释，或演示程序。
 
 ---
 ### 2. 部分自定义组件绘制API
 
--- drawPointcloudWithShader  `绘制自定义着色点云`   
+-- drawPointcloudWithShader  `绘制自定义着色点云`
 
 使用自定义着色器函数进行点云着色，着色器函数类型如下，支持lambda表达式、函数和成员函数。
 ```C++
@@ -61,13 +62,13 @@ Eigen::Vector3d mandelbrotShader(const Eigen::Vector3d pos) {
 void demo(){
     // 点云定义...
     // 使用自定义着色器绘制点云
-    Livz::drawPointcloudWithShader("shader_pointcloud", cloud, mandelbrotShader);    
+    Livz::drawPointcloudWithShader("shader_pointcloud", cloud, mandelbrotShader);
 }
 ```
-这将采用曼德勃罗集合染色函数来染色点云：  
+这将采用曼德勃罗集合染色函数来染色点云：
 <img src="./imgs/shader_pc.png" width="500" height="500">
 
--- drawParametricCurve  `绘制参数化曲线`  
+-- drawParametricCurve  `绘制参数化曲线`
 
 绘制自定义参数化三维曲线，其定义如下：
 ```C++
@@ -85,7 +86,7 @@ Livz::drawParametricCurve("parametric_curve", curveFunction, Eigen::Vector2d(-10
 <img src="./imgs/curve.png" width="800" height="500">
 
 
--- renderSurface  `绘制参数化曲面（二元函数）`  
+-- renderSurface  `绘制参数化曲面（二元函数）`
 
 绘制自定义参数化曲面，其定义如下：
 ```C++
@@ -96,7 +97,7 @@ typedef std::function<double(const double, const double )> ParametricSurfaceFunc
 ```C++
 class A{
 public:
-  double surf_func(double u, double v) { 
+  double surf_func(double u, double v) {
     double z = 0.1 *u * v; // 马鞍曲面
     return z + 20;
   }
@@ -111,7 +112,7 @@ public:
 void outside_class() {
   A a;
   // 如果在类外，就只好用lambda包装一下了
-  auto func = [a](double u, double v)->double{ return a.surf_func(u,v);} ; 
+  auto func = [a](double u, double v)->double{ return a.surf_func(u,v);} ;
   Livz::renderSurface("surf", func, Eigen::Vector2d(-10, 10), Eigen::Vector2d(-10, 10), 0.1, 0.1, LCOLOR::GOLD, 0.5, "map", 1);
 }
 ```
@@ -121,19 +122,19 @@ void outside_class() {
 ---
 Livz 中，可以快捷地生成相同话题下相同类型可视化的非线性插值动画，只需要使用下面这个API：
 
--- createAnimate `创建一个动画任务`  
+-- createAnimate `创建一个动画任务`
 
-所需要的参数为：  
--- LAnimateParam ani_param `动画参数`  
--- Func func `执行函数`  
--- Params params_begin `初状态参数`  
--- Params params_end `末状态参数`  
+所需要的参数为：
+-- LAnimateParam ani_param `动画参数`
+-- Func func `执行函数`
+-- Params params_begin `初状态参数`
+-- Params params_end `末状态参数`
 
 LAnimateParam 类包含四个参数：
 
--- topic_name_ `话题名称`  
--- duration_   `动画持续时间`  
--- rate_func_  `插值函数`  
+-- topic_name_ `话题名称`
+-- duration_   `动画持续时间`
+-- rate_func_  `插值函数`
 -- loop_     `是否循环`
 
 以下为一个示例，演示了从一个点云过渡变化到另一个点云：
@@ -159,8 +160,8 @@ LAnimateParam 类包含四个参数：
   // 话题名 pointcloud ， 持续时间4秒，线性插值函数，不循环。
   LAnimateParam ani_param("pointcloud", 4.0, RATE_FUNC::linear, false);
   // 用 LPARAMS 打包  Livz::drawPointcloud 所需的参数
-  Livz::createAnimate(ani_param, Livz::drawPointcloud, 
-                      LPARAMS(cloud1     , LCOLOR::CYAN,     "map") , 
+  Livz::createAnimate(ani_param, Livz::drawPointcloud,
+                      LPARAMS(cloud1     , LCOLOR::CYAN,     "map") ,
                       LPARAMS(cloud2     , LCOLOR::ORANGE,   "map") );
 ```
 
@@ -184,7 +185,7 @@ typedef std::function<bool( ... )> UpdaterFunction;
 
 执行addUpdater后，添加的 updater function 将在每一帧被调用，直到 updater function 返回true或者使用 removeUpdater 移除。
 
--- addUpdater   `添加 updater function 任务`   
+-- addUpdater   `添加 updater function 任务`
 -- removeUpdater   `移除 updater function 任务`
 
 以下是一个示例，演示了让一个小球沿着轨迹运动10秒：
@@ -199,10 +200,10 @@ bool moveBallUpdater(double duration){
     Livz::drawOneSphere("sphere", sin3D(duration), 0.7, LCOLOR::YELLOW, -1.0, "map",1);
 
   // 10 秒后销毁任务
-    if(duration > 10.0){ 
+    if(duration > 10.0){
         Livz::clearAll("sphere");
         return true; //这将结束任务，自动删除此updater
-    } 
+    }
     return false;
 }
 // 新建任务，命名为 task1
@@ -222,7 +223,7 @@ Livz提供两种三维向量场的可视化方法： 梯度箭头和流线。
 typedef std::function<Eigen::Vector3d(Eigen::Vector3d)> vectorFieldFunction
 ```
 
--- renderVectorField `用梯度箭头的方法可视化向量场`  
+-- renderVectorField `用梯度箭头的方法可视化向量场`
 -- renderStreamLines `用流线的方法可视化向量场`
 
 更加推荐用 renderStreamLines 可视化向量场，因为Marker 没有提供ARROW_LIST类型，因此绘制大量箭头需要频繁地向GPU传输顶点信息，开销很大。

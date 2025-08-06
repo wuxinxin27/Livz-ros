@@ -492,6 +492,54 @@ void Livz::drawOneSphere( const std::string& topic_name,
     publisher.publish(sphere);
 }
 
+void Livz::drawOneEllipsoid(const std::string& topic_name,
+    const Eigen::Vector3d& position,
+    const Eigen::Vector3d& semi_axes,
+    const Eigen::Quaterniond& orientation,
+    Eigen::Vector4d color,
+    double opacity,
+    std::string frame_id,
+    int id)
+{
+    if( std::isinf(position.norm()) || std::isnan(position.norm()) ) { return ; }
+    if( std::isinf(semi_axes.norm()) || std::isnan(semi_axes.norm()) ) { return ; }
+
+    ros::Publisher& publisher = getInstance().getPublisher(topic_name);
+
+    visualization_msgs::Marker ellipsoid;
+
+    ellipsoid.header.frame_id    = frame_id;
+    ellipsoid.header.stamp       = ros::Time::now();
+    ellipsoid.ns                 = "ellipsoids";
+    ellipsoid.action             = visualization_msgs::Marker::ADD;
+    ellipsoid.pose.position.x    = position(0);
+    ellipsoid.pose.position.y    = position(1);
+    ellipsoid.pose.position.z    = position(2);
+
+    // 设置椭球的方向（四元数）
+    ellipsoid.pose.orientation.x = orientation.x();
+    ellipsoid.pose.orientation.y = orientation.y();
+    ellipsoid.pose.orientation.z = orientation.z();
+    ellipsoid.pose.orientation.w = orientation.w();
+
+    ellipsoid.id                 = id;
+    ellipsoid.type               = visualization_msgs::Marker::SPHERE;
+
+    // 设置椭球的三个半轴长（注意：scale对应的是直径，所以需要乘以2）
+    ellipsoid.scale.x            = 2.0 * std::abs(semi_axes(0));
+    ellipsoid.scale.y            = 2.0 * std::abs(semi_axes(1));
+    ellipsoid.scale.z            = 2.0 * std::abs(semi_axes(2));
+
+    ellipsoid.color.r = color(0);
+    ellipsoid.color.g = color(1);
+    ellipsoid.color.b = color(2);
+    ellipsoid.color.a = (opacity >= 0.0 && opacity <= 1.0) ? opacity : color(3);
+    ellipsoid.color.a = (ellipsoid.color.a >= 0.0 && ellipsoid.color.a <= 0.1) ? 0 : ellipsoid.color.a;
+
+    publisher.publish(ellipsoid);
+}
+
+
 void Livz::drawOneCylinder(const std::string& topic_name,
                                 Eigen::Vector3d position,
                                 double radius,

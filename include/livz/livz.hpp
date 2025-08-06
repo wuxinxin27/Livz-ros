@@ -1,7 +1,7 @@
 // Copyright (c) [2023] [Lantern]
-// 
+//
 // This file is part of [Livz]
-// 
+//
 // This project is licensed under the MIT License.
 // See LICENSE.txt for details.
 #ifndef LROSVIS_LIB_H
@@ -20,6 +20,7 @@
 
 #include <ros/ros.h>
 #include <Eigen/Eigen>
+#include <Eigen/Geometry>
 #include <boost/bind.hpp>
 
 #include <std_msgs/ColorRGBA.h>
@@ -265,7 +266,7 @@ public:
 
     /**
      * @brief litouch_cmd 话题回调
-     * 
+     *
     */
     static void litouchCmdCbk(const std_msgs::Float64MultiArray::ConstPtr& msg);
 
@@ -279,11 +280,11 @@ public:
     */
     static void setLitouchAction(LitouchCmdActionFunc func);
 
-    
+
 
 
     ////////////////////////////////////////////////////////////////////
-    
+
 
     /**
      * @brief 设置多边形显示模式
@@ -300,7 +301,7 @@ public:
 
 
     template <typename Func, typename Params>
-    static void createAnimate(const LAnimateParam& ani_param , Func func, Params params1, Params params2) { 
+    static void createAnimate(const LAnimateParam& ani_param , Func func, Params params1, Params params2) {
         // std::cout<<"create animate"<<std::endl;
         std::tuple topic_element = std::make_tuple(ani_param.topic_name_);
         std::tuple params1_f = std::tuple_cat( topic_element , params1 );
@@ -312,13 +313,13 @@ public:
     }
 
     static void AddUpdater( const std::string& updater_name, std::function<bool(const double)> update_function ,
-                            const std::string& file = "Use addUpdater rather than AddUpdater to get more information", 
+                            const std::string& file = "Use addUpdater rather than AddUpdater to get more information",
                             int line = -1);
 
     static void RemoveUpdater( const std::string& updater_name,
-                               const std::string& file = "Use removeUpdater rather than RemoveUpdater to get more information", 
+                               const std::string& file = "Use removeUpdater rather than RemoveUpdater to get more information",
                                int line = -1);
-    
+
 
 
     ///////////////// RVIZ 可视化部分
@@ -349,14 +350,14 @@ public:
      * @param frame_id string - 参考坐标系（默认为"/map"）。
      * @param id int - 点的标识符（默认为114514）。
      */
-    static void drawOnePoint( const std::string& topic_name, 
-                               const Eigen::Vector3d& position, 
-                               double size = 0.5, 
-                               Eigen::Vector4d color = LCOLOR::YELLOW, 
-                               double opacity = -1.0, 
-                               std::string frame_id = CONFIG::default_frame_id, 
+    static void drawOnePoint( const std::string& topic_name,
+                               const Eigen::Vector3d& position,
+                               double size = 0.5,
+                               Eigen::Vector4d color = LCOLOR::YELLOW,
+                               double opacity = -1.0,
+                               std::string frame_id = CONFIG::default_frame_id,
                                int id = 114514) ;
-    
+
     /**
      * @brief 绘制多个点。
      * @param topic_name string - 发布的主题名称。
@@ -367,14 +368,14 @@ public:
      * @param frame_id string - 参考坐标系（默认为"/map"）。
      * @param id int - 点的起始标识符（默认为1114514）。
      */
-    static void drawPoints( const std::string& topic_name, 
-                            const std::vector<Eigen::Vector3d>& positions, 
+    static void drawPoints( const std::string& topic_name,
+                            const std::vector<Eigen::Vector3d>& positions,
                             std::vector<double> sizes = {},
-                            std::vector<Eigen::Vector4d> colors = {}, 
+                            std::vector<Eigen::Vector4d> colors = {},
                             std::vector<double> opacities = {},
-                            std::string frame_id = CONFIG::default_frame_id, 
+                            std::string frame_id = CONFIG::default_frame_id,
                             int id = 1114514);
-    
+
     /**
      * @brief 绘制一个球体。
      * @param topic_name string - 发布的主题名称。
@@ -392,7 +393,27 @@ public:
                        double opacity = -1.0,
                        std::string frame_id = CONFIG::default_frame_id,
                        int id = 124514);
-    
+
+    /**
+     * @brief 绘制一个3D椭球。
+     * @param topic_name string - 发布的主题名称。
+     * @param position Eigen::Vector3d - 椭球中心位置。
+     * @param semi_axes Eigen::Vector3d - 椭球的三个半轴长（x, y, z方向）。
+     * @param orientation Eigen::Quaterniond - 椭球的方向（默认为单位四元数）。
+     * @param color Eigen::Vector4d - 椭球颜色（默认为黄色）。
+     * @param opacity double - 椭球不透明度（默认为-1.0，使用颜色中的alpha值）。
+     * @param frame_id string - 参考坐标系（默认为"/map"）。
+     * @param id int - 椭球标识符（默认为124515）。
+     */
+    static void drawOneEllipsoid(const std::string& topic_name,
+                          const Eigen::Vector3d& position,
+                          const Eigen::Vector3d& semi_axes,
+                          const Eigen::Quaterniond& orientation = Eigen::Quaterniond::Identity(),
+                          Eigen::Vector4d color = LCOLOR::YELLOW,
+                          double opacity = -1.0,
+                          std::string frame_id = CONFIG::default_frame_id,
+                          int id = 124515);
+
     /**
      * @brief 绘制圆柱体。
      * @param topic_name string - 发布的主题名称。
@@ -430,7 +451,7 @@ public:
                         double opacity = -1.0,
                         std::string frame_id = CONFIG::default_frame_id,
                         int id = 94514);
-    
+
     /**
      * @brief 绘制箭头。
      * @param topic_name string - 发布的主题名称。
@@ -493,7 +514,7 @@ public:
                                     const std::string& frame_id = CONFIG::default_frame_id,
                                     int id = 74514);
 
-    
+
     /**
      * @brief 绘制一条折线。
      * @param topic_name string - 发布的主题名称。
@@ -511,7 +532,7 @@ public:
                           double opacity = -1.0,
                           std::string frame_id = CONFIG::default_frame_id,
                           int id = 134514);
-    
+
     /**
      * @brief 绘制线段群。
      * @param topic_name string - 发布的主题名称。
@@ -565,7 +586,7 @@ public:
                                      double opacity  = -1.0,
                                      std::string frame_id = CONFIG::default_frame_id,
                                      int id = 144514);
-    
+
     /**
      * @brief 绘制一个2D多边形。
      * @param topic_name string - 发布的主题名称。
@@ -583,9 +604,9 @@ public:
                                      double opacity  = -1.0,
                                      std::string frame_id = CONFIG::default_frame_id,
                                      int id = 144514);
-    
 
-    
+
+
     /**
      * @brief 绘制一个2D矩形。
      * @param topic_name string - 发布的主题名称。
@@ -630,7 +651,7 @@ public:
                              std::string frame_id = CONFIG::default_frame_id,
                              int id = 164514,
                              int samples = 100);
-    
+
     /**
      * @brief 绘制一个2D椭圆。
      * @param topic_name string - 发布的主题名称。
@@ -647,7 +668,7 @@ public:
      */
     static void draw2DEllipse(const std::string& topic_name,
                           const Eigen::Vector3d& center,
-                          double major_axis, double minor_axis, 
+                          double major_axis, double minor_axis,
                           double rot_z = 0.0,
                           Eigen::Vector4d color = LCOLOR::YELLOW,
                           double stroke_width    = 0.1,
@@ -655,7 +676,7 @@ public:
                           std::string frame_id = CONFIG::default_frame_id,
                           int id = 174514,
                           int samples = 100);
-    
+
 
     /**
      * @brief 绘制一个2D圆锥,默认锥轴沿x轴正向。
@@ -682,7 +703,7 @@ public:
                           std::string frame_id = CONFIG::default_frame_id,
                           int id = 184514,
                           int samples = 40);
-    
+
     /**
      * @brief 绘制点云。
      * @param topic_name string - 发布的主题名称。
@@ -694,7 +715,7 @@ public:
                               pcl::PointCloud<pcl::PointXYZ>& cloud,
                               Eigen::Vector4d color = LCOLOR::WHITE,
                               std::string frame_id  = CONFIG::default_frame_id);
-    
+
     /**
      * @brief 绘制彩色点云。
      * @param topic_name string - 发布的主题名称。
@@ -704,7 +725,7 @@ public:
     static void drawPointcloudRGB( const std::string& topic_name,
                                 pcl::PointCloud<pcl::PointXYZRGB>& cloud,
                                 std::string frame_id = CONFIG::default_frame_id );
-    
+
     /**
      * @brief 绘制带强度信息点云。
      * @param topic_name string - 发布的主题名称。
@@ -714,7 +735,7 @@ public:
     static void drawPointcloudI( const std::string& topic_name,
                                 pcl::PointCloud<pcl::PointXYZI>& cloud,
                                 std::string frame_id = CONFIG::default_frame_id );
-    
+
     /**
      * @brief 绘制自定义着色点云。
      * @param topic_name string - 发布的主题名称。
@@ -726,7 +747,7 @@ public:
                                         pcl::PointCloud<pcl::PointXYZ>& cloud,
                                         ShaderFunction shader,
                                         std::string frame_id = CONFIG::default_frame_id );
-    
+
     /**
      * @brief 绘制参数化曲线。
      * @param topic_name string - 发布的主题名称。
@@ -748,7 +769,7 @@ public:
                                      std::string frame_id = CONFIG::default_frame_id,
                                      int id = 194514,
                                      double sample_gap = 0.1 );
-    
+
    /**
      * @brief 绘制始终朝向视口的文字。
      * @param topic_name string - 发布的主题名称。
@@ -778,9 +799,9 @@ public:
      * @param frame_id string - 参考坐标系（默认为"/map"）。
      * @param id int - 文字的标识号（默认为 904514）。
      */
-    static void renderTrianglesWithColors(const std::string& topic_name, 
-                                 Eigen::Matrix3Xd &mesh_vertexes, 
-                                 const std::vector<Eigen::Vector4d>& colors, 
+    static void renderTrianglesWithColors(const std::string& topic_name,
+                                 Eigen::Matrix3Xd &mesh_vertexes,
+                                 const std::vector<Eigen::Vector4d>& colors,
                                  double opacity = -1.0,
                                  std::string frame_id = CONFIG::default_frame_id,
                                  int id = 904514);
@@ -794,9 +815,9 @@ public:
      * @param frame_id string - 参考坐标系（默认为"/map"）。
      * @param id int - 文字的标识号（默认为 214514）。
      */
-    static void renderTriangleMesh(const std::string& topic_name, 
-                                 Eigen::Matrix3Xd &mesh_vertexes, 
-                                 Eigen::Vector4d color = LCOLOR::AZURE, 
+    static void renderTriangleMesh(const std::string& topic_name,
+                                 Eigen::Matrix3Xd &mesh_vertexes,
+                                 Eigen::Vector4d color = LCOLOR::AZURE,
                                  double opacity = -1.0,
                                  std::string frame_id = CONFIG::default_frame_id,
                                  int id = 214514);
@@ -811,15 +832,15 @@ public:
      * @param frame_id string - 参考坐标系（默认为"/map"）。
      * @param id int - 文字的标识号（默认为 531241）。
      */
-    static void renderTriangleMeshWithEdges(const std::string& meshtopic, 
-                                            const std::string& edgetopic, 
-                                            Eigen::MatrixXd &U, 
-                                            Eigen::MatrixXi &G, 
-                                            Eigen::Vector4d color= LCOLOR::AZURE, 
+    static void renderTriangleMeshWithEdges(const std::string& meshtopic,
+                                            const std::string& edgetopic,
+                                            Eigen::MatrixXd &U,
+                                            Eigen::MatrixXi &G,
+                                            Eigen::Vector4d color= LCOLOR::AZURE,
                                             double opacity = -1.0,
                                             std::string frame_id=CONFIG::default_frame_id,
                                             int id=531241);
-    
+
      /**
      * @brief 绘制三角网格体的棱。
      * @param topic_name string - 发布的主题名称。
@@ -830,14 +851,14 @@ public:
      * @param frame_id string - 参考坐标系（默认为"/map"）。
      * @param id int - 文字的标识号（默认为 224514）。
      */
-    static void renderTriangleMeshEdges( const std::string& topic_name, 
-                                        Eigen::Matrix3Xd &mesh_vertexes, 
-                                        Eigen::Vector4d color = LCOLOR::BLACK, 
+    static void renderTriangleMeshEdges( const std::string& topic_name,
+                                        Eigen::Matrix3Xd &mesh_vertexes,
+                                        Eigen::Vector4d color = LCOLOR::BLACK,
                                         double stroke_width = 0.1,
                                         double opacity = -1.0,
                                         std::string frame_id = CONFIG::default_frame_id,
                                         int id = 224514);
-    
+
     /**
      * @brief 绘制二元函 z = f(u,v)（参数曲面）。
      * @param topic_name string - 发布的主题名称。
@@ -851,17 +872,17 @@ public:
      * @param frame_id string - 参考坐标系（默认为"/map"）。
      * @param id int - 标识号（默认为 224514）。
      */
-    static void renderSurface(const std::string& topic_name, 
+    static void renderSurface(const std::string& topic_name,
                                         ParametricSurfaceFunction surf_function,
                                         Eigen::Vector2d u_range =  Eigen::Vector2d(-1,1),
                                         Eigen::Vector2d v_range =  Eigen::Vector2d(-1,1),
                                         double u_res = 0.25,
                                         double v_res = 0.25,
-                                        Eigen::Vector4d color = LCOLOR::GOLD, 
+                                        Eigen::Vector4d color = LCOLOR::GOLD,
                                         double opacity = -1.0,
                                         std::string frame_id = CONFIG::default_frame_id,
                                         int id = 234514);
-    
+
 
     /**
      * @brief 可视化向量场。
@@ -877,18 +898,18 @@ public:
      * @param frame_id string - 参考坐标系（默认为"/map"）。
      * @param id int - 标识号（默认为 244514）。
      */
-    static void renderVectorField(  const std::string& topic_name, 
+    static void renderVectorField(  const std::string& topic_name,
                                     VectorField field_function,
                                     Eigen::Vector3d box_min =  Eigen::Vector3d(-1,-1,-1),
                                     Eigen::Vector3d box_max =  Eigen::Vector3d( 1, 1, 1),
                                     Eigen::Vector3d resolution = Eigen::Vector3d( 0.2, 0.2, 0.2),
                                     const bool only_2d      = false,
-                                    Eigen::Vector4d color_min = LCOLOR::RED, 
-                                    Eigen::Vector4d color_max = LCOLOR::GOLD, 
+                                    Eigen::Vector4d color_min = LCOLOR::RED,
+                                    Eigen::Vector4d color_max = LCOLOR::GOLD,
                                     double opacity = -1.0,
                                     std::string frame_id = CONFIG::default_frame_id,
                                     int id = 244514);
-    
+
     /**
      * @brief 可视化向量场的流线。
      * @param topic_name string - 发布的主题名称。
@@ -905,7 +926,7 @@ public:
      * @param frame_id string - 参考坐标系（默认为"/map"）。
      * @param id int - 标识号（默认为 244514）。
      */
-    static void renderStreamLines(  const std::string& topic_name, 
+    static void renderStreamLines(  const std::string& topic_name,
                                     VectorField field_function,
                                     Eigen::Vector3d box_min =  Eigen::Vector3d(-1,-1,-1),
                                     Eigen::Vector3d box_max =  Eigen::Vector3d( 1, 1, 1),
@@ -913,8 +934,8 @@ public:
                                     int start_step            = 0,
                                     int end_step              = 10,
                                     const bool only_2d        = false,
-                                    Eigen::Vector4d color_min = LCOLOR::RED, 
-                                    Eigen::Vector4d color_max = LCOLOR::GOLD, 
+                                    Eigen::Vector4d color_min = LCOLOR::RED,
+                                    Eigen::Vector4d color_max = LCOLOR::GOLD,
                                     double opacity = -1.0,
                                     std::string frame_id = CONFIG::default_frame_id,
                                     int id = 244514);
