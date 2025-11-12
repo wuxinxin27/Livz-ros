@@ -25,7 +25,7 @@ std::function<void(const std::string&, const std::vector<Eigen::Vector3d>&, Eige
 std::function<void(const int cmd_id, const std::vector<double> params)> Livz::litouchCmdAction = Livz::defaultLitouchCmdAction;
 
 namespace CONFIG{
-    std::string default_frame_id = "map";
+    std::string default_frame_id = "world";
 }
 
 namespace LCOLOR{
